@@ -7,7 +7,7 @@ export class ConfigService {
 
   constructor(filePath: string) {
     this.envConfig = dotenv.parse(
-      fs.readFileSync(path.join(path.dirname(__dirname), '../') + filePath),
+      fs.readFileSync(path.join(path.dirname(__dirname), '../env_variable/') + filePath),
     );
     console.log(process.env.NODE_ENV);
   }
