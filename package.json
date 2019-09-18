@@ -11,6 +11,7 @@
     "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
     "dev": "set NODE_ENV=development&& tsc-watch -p tsconfig.build.json --onSuccess \"nodemon dist/main.js\"",
     "production": "set NODE_ENV=production&& nodemon dist/main.js",
+    "docker:production": "nodemon dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -25,6 +26,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0",
     "dotenv": "^8.1.0",
+    "nodemon": "^1.19.2",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3"
