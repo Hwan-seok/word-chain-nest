@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: node-nginx-lb
+    build: ./nginx
+    ports:
+      - 4000:4000
+    networks:
+      - backend
+
+  app-1:
+    container_name: node-nginx-1
+    build: .
+    ports:
+      - 3000
+    networks:
+      - backend
+
+  app-2:
+    container_name: node-nginx-2
+    build: .
+    ports:
+      - 3000
+    networks:
+      - backend
+
+  app-3:
+    container_name: node-nginx-3
+    build: .
+    ports:
+      - 3000
+    networks:
+      - backend
+networks: # 가장 기본적인 bridge 네트워크
+  backend:
+    driver: bridge
