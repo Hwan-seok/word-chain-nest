@@ -7,7 +7,7 @@ export class AppService {
   constructor(private readonly wordService: WordService) {}
 
   heartBeat(): string {
-    console.log(this.wordService.findAll());
+    console.log(this.wordService.findOne());
     return `Alive! ${uuid} `;
   }
 }
