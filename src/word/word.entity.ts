@@ -1,6 +1,6 @@
 import { Table, Column, Model, PrimaryKey } from 'sequelize-typescript';
 
-@Table
+@Table({ timestamps: false })
 export class Word extends Model<Word> {
   @PrimaryKey
   @Column
