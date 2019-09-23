@@ -22,8 +22,10 @@ export class AuthController {
     console.log('user', req.user);
     return this.authService.login(req.user);
   }
-  @Get(':token')
-  async wer(@Param('token') token) {
-    return this.jwtService.decrypt(token);
+
+  @UseGuards(AuthGuard())
+  @Get('jwt')
+  async wer(@Request() req) {
+    return req.user;
   }
 }

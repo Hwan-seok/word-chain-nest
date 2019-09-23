@@ -16,3 +16,14 @@ export class AuthService {
     }
     return null;
   }
+  async login(user: UserEntity) {
+    console.log('user2', user);
+    const payload = { id: user.id };
+    console.log('payload', payload);
+
+    return {
+      access_token: this.jwtService.sign(payload, { expiresIn: '2 days' }),
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '14 days' }),
+    };
+  }
+}
