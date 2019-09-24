@@ -1,13 +1,15 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Word } from './word.entity';
+import { WordEntity } from './word.entity';
+import { WORDS_REPOSITORY } from './word.constants';
 
 @Injectable()
 export class WordService {
   constructor(
-    @Inject('WORDS_REPOSITORY') private readonly WORDS_REPOSITORY: typeof Word,
+    @Inject(WORDS_REPOSITORY)
+    private readonly WORDS_REPOSITORY: typeof WordEntity,
   ) {}
 
-  async findOne(): Promise<Word[]> {
-    return await this.WORDS_REPOSITORY.findAll<Word>();
+  async findOne(): Promise<WordEntity[]> {
+    return await this.WORDS_REPOSITORY.findAll<WordEntity>();
   }
 }

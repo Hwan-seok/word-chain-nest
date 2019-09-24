@@ -1,6 +1,9 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Word } from '../word/word.entity';
+import { WordEntity } from '../word/word.entity';
 import { ConfigService } from '../config/config.service';
+import { UserEntity } from '../user/user.entity';
+import { RoomEntity } from '../room/room.entity';
+import { Message } from '../chat/chat.entity';
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -13,8 +16,9 @@ export const databaseProviders = [
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
       });
-      sequelize.addModels([Word]);
-      await sequelize.sync();
+      sequelize.drop;
+      sequelize.addModels([WordEntity, UserEntity, RoomEntity, Message]);
+      await sequelize.sync({ force: true });
       return sequelize;
     },
     inject: [ConfigService],

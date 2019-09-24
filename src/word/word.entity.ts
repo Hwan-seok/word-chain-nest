@@ -1,7 +1,7 @@
 import { Table, Column, Model, PrimaryKey } from 'sequelize-typescript';
 
-@Table
-export class Word extends Model<Word> {
+@Table({ tableName: 'words', timestamps: false })
+export class WordEntity extends Model<WordEntity> {
   @PrimaryKey
   @Column
   id: number;
