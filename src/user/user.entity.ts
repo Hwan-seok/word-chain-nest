@@ -6,30 +6,42 @@ import {
   PrimaryKey,
   Default,
   UpdatedAt,
+  BelongsTo,
+  ForeignKey,
+  HasOne,
 } from 'sequelize-typescript';
+import { Message } from '../chat/chat.entity';
+import { RoomEntity } from '../room/room.entity';
 
 @Table({ tableName: 'Users', underscored: true })
 export class UserEntity extends Model<UserEntity> {
   @PrimaryKey
   @Column
-  id: string;
+  id: String;
 
   @Column
-  password: string;
+  password: String;
 
   @Column
-  email: string;
+  email: String;
 
   @Column
-  userName: string;
+  userName: String;
+
+  @ForeignKey(() => RoomEntity)
+  @Column
+  participated: Number;
 
   @Default(false)
   @Column
-  isAdmin: boolean;
+  isAdmin: Boolean;
 
   @CreatedAt
   createdAt: Date;
 
   @UpdatedAt
   updatedAt: Date;
+
+  @BelongsTo(() => RoomEntity)
+  room: RoomEntity;
 }
