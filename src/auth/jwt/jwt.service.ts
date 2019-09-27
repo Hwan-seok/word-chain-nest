@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '../../config/config.service';
-import { sign, verify } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { WsException } from '@nestjs/websockets';
 import { UserDTO } from '../../user/dto/user.dto';
 import { UserService } from '../../user/user.service';
-import { UserEntity } from 'src/user/user.entity';
+import { UserEntity } from '../../user/user.entity';
 
 @Injectable()
 export class JWTService {
@@ -17,15 +17,16 @@ export class JWTService {
   }
 
   async generate(user: UserDTO): Promise<any> {
+    delete user.password;
     const payload = {
       user,
     };
 
-    const accessTokenPromise = sign(payload, this.privateKey, {
+    const accessTokenPromise = jwt.sign(payload, this.privateKey, {
       expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRES'),
     });
 
-    const refreshTokenPromise = sign(payload, this.privateKey, {
+    const refreshTokenPromise = jwt.sign(payload, this.privateKey, {
       expiresIn: this.configService.get('REFRESH_TOKEN_EXPIRES'),
     });
 
@@ -33,15 +34,16 @@ export class JWTService {
       accessTokenPromise,
       refreshTokenPromise,
     ]);
-    console.log(await verify(accessToken, this.privateKey));
+    console.log(await jwt.verify(accessToken, this.privateKey));
     return { accessToken, refreshToken };
   }
 
-  async decrypt(token: string, isWs: boolean = false): Promise<any> {
+  async verify(token: string, isWs: boolean = false): Promise<any> {
     try {
-      const payload = await verify(token, this.privateKey);
+      const payload: any = await jwt.verify(token, this.privateKey);
+      console.log('payload', payload);
       const user: UserEntity = await this.userService.findUserById(
-        payload.user.id,
+        payload.userId,
       );
 
       if (!user) {

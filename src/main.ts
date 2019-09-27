@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet()); // To protect app from some well-known web vulnerabilities by setting HTTP headers appropriately.
   app.enableCors(); // To enable CORS
-  app.use(csurf()); // To protect applications from cross-site request forgery
+  //app.use(csurf()); // To protect applications from cross-site request forgery
   app.use(
     //To protect applications from brute-force attacks
     rateLimit({
