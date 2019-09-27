@@ -17,24 +17,24 @@ import { RoomEntity } from '../room/room.entity';
 export class UserEntity extends Model<UserEntity> {
   @PrimaryKey
   @Column
-  id: String;
+  id: string;
 
   @Column
-  password: String;
+  password: string;
 
   @Column
-  email: String;
+  email: string;
 
   @Column
-  userName: String;
+  userName: string;
 
   @ForeignKey(() => RoomEntity)
   @Column
-  participated: Number;
+  participated: number;
 
   @Default(false)
   @Column
-  isAdmin: Boolean;
+  isAdmin: boolean;
 
   @CreatedAt
   createdAt: Date;

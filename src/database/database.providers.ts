@@ -18,7 +18,7 @@ export const databaseProviders = [
       });
       sequelize.drop;
       sequelize.addModels([WordEntity, UserEntity, RoomEntity, Message]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync();
       return sequelize;
     },
     inject: [ConfigService],

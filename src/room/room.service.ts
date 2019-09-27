@@ -9,6 +9,19 @@ export class RoomService {
     @Inject(ROOM_REPOSITORY)
     private readonly roomRepository: typeof RoomEntity,
   ) {}
+
+  async joinUser(roomNum: string, userId: string) {}
+
+  async leaveUser(roomNum: string, userId: string) {}
+
+  async findAll() {}
+
+  async create() {}
+
+  async update() {}
+
+  async delete() {}
+
   //   async findAllRooms(offset: number) {
   //     this.roomRepository.findAndCountAll({ limit: 10, offset });
   //   }
