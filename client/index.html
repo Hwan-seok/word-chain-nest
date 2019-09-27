@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <script src="socket.io.js"></script>
+    <script>
+      const socket = io('http://localhost:3000/line', {
+        query: {
+          roomNum: 1,
+          token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJnMnMiLCJpYXQiOjE1Njk1ODQxMzgsImV4cCI6MTU2OTc1NjkzOH0.RfKeV1t-nnlFbv7Rsj1v62MGEPhGDj-qikoLqkxOapo',
+        },
+      });
+      socket.on('connect', function() {
+        console.log('Connected');
+        socket.emit('events', { test: 'test' });
+        socket.emit('identity', 0, response =>
+          console.log('Identity:', response),
+        );
+      });
+      socket.on('joinUser', function() {
+        console.log('join!');
+      });
+      socket.on('leaveUser', function() {
+        console.log('leaveUser!');
+      });
+      socket.on('events', function(data) {
+        console.log('event', data);
+      });
+      socket.on('fuck', d => {
+        console.log(d);
+      });
+      socket.on('exception', function(data) {
+        console.log('event', data);
+      });
+      socket.on('disconnect', function() {
+        console.log('Disconnected');
+      });
+    </script>
+  </head>
+
+  <body></body>
+</html>
