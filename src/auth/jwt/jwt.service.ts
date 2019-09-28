@@ -34,14 +34,12 @@ export class JWTService {
       accessTokenPromise,
       refreshTokenPromise,
     ]);
-    console.log(await jwt.verify(accessToken, this.privateKey));
     return { accessToken, refreshToken };
   }
 
   async verify(token: string, isWs: boolean = false): Promise<any> {
     try {
       const payload: any = await jwt.verify(token, this.privateKey);
-      console.log('payload', payload);
       const user: UserEntity = await this.userService.findUserById(
         payload.userId,
       );

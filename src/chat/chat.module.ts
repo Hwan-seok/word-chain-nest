@@ -5,8 +5,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '../config/config.service';
 import { ConfigModule } from '../config/config.module';
-import { RoomModule } from '../room/room.module';
 import { AuthModule } from '../auth/auth.module';
+import { UserModule } from '../user/user.module';
+import { RoomModule } from '../room/room.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { AuthModule } from '../auth/auth.module';
       }),
       inject: [ConfigService],
     }),
-    RoomModule,
+    UserModule,
     AuthModule,
+    RoomModule,
   ],
   providers: [ChatService, ChatEvents],
 })

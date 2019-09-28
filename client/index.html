@@ -6,7 +6,7 @@
         query: {
           roomNum: 1,
           token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJnMnMiLCJpYXQiOjE1Njk1ODQxMzgsImV4cCI6MTU2OTc1NjkzOH0.RfKeV1t-nnlFbv7Rsj1v62MGEPhGDj-qikoLqkxOapo',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJnMnMiLCJpYXQiOjE1Njk2OTg3NjcsImV4cCI6MTU2OTg3MTU2N30.JBHJxYTb4_eKaa_fBlJrUNzmDWvcV02BmSLvTi6vWoM',
         },
       });
       socket.on('connect', function() {
@@ -15,6 +15,7 @@
         socket.emit('identity', 0, response =>
           console.log('Identity:', response),
         );
+        socket.emit('userSentMessage', 'asdf');
       });
       socket.on('joinUser', function() {
         console.log('join!');
@@ -27,6 +28,13 @@
       });
       socket.on('fuck', d => {
         console.log(d);
+      });
+      socket.on('serverSentMessage', data => {
+        console.log('1213');
+      });
+      socket.on('startGame', data => {
+        console.log('start');
+        // TODO: 채팅창 풀기
       });
       socket.on('exception', function(data) {
         console.log('event', data);

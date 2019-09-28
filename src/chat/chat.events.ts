@@ -13,12 +13,15 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTService } from '../auth/jwt/jwt.service';
 import { UserEntity } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { Message } from './interfaces/chat.message';
 import { RoomService } from '../room/room.service';
 
 @WebSocketGateway({ namespace: '/line' })
 export class ChatEvents implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly jwtService: JWTService,
+    private readonly userService: UserService,
     private readonly roomService: RoomService,
   ) {}
 
@@ -28,21 +31,33 @@ export class ChatEvents implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(socket) {
     const { roomNum, userId } = await this.throughConnection(socket);
 
-    this.roomService.joinUser(roomNum, userId);
+    this.userService.joinRoom(roomNum, userId);
     socket.join(roomNum);
     this.server.to(roomNum).emit('joinUser', userId);
   }
+
   async handleDisconnect(socket) {
     const { roomNum, userId } = await this.throughConnection(socket);
-    
-    this.roomService.leaveUser(roomNum, userId);
+
+    this.userService.leaveRoom(roomNum, userId);
     socket.leave(roomNum);
     this.server.to(roomNum).emit('leaveUser', userId);
   }
 
-  @SubscribeMessage('events')
-  findAll(socket: Socket, data: any) {
-    socket.broadcast.to('1').emit('events', 'asdf');
+  @SubscribeMessage('userSentMessage')
+  async sentMessage(socket: Socket, message: Message) {
+    socket.broadcast
+      .to(socket.handshake.query.roomNum)
+      .emit('serverSentMessage', message);
+  }
+
+  @SubscribeMessage('startGame')
+  async startGame(socket: Socket, message: Message) {
+    this.roomService.update({
+      roomNum: message.roomNum,
+      isStarted: true,
+    });
+    this.server.to(message.roomNum.toString()).emit('startGame');
   }
 
   @SubscribeMessage('identity')
