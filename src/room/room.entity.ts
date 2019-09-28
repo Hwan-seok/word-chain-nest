@@ -7,27 +7,34 @@ import {
   HasMany,
   Table,
   HasOne,
+  AutoIncrement,
+  Default,
 } from 'sequelize-typescript';
 import { Message } from '../chat/chat.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Table({ tableName: 'Rooms', underscored: true })
 export class RoomEntity extends Model<RoomEntity> {
+  @AutoIncrement
   @PrimaryKey
   @Column
-  roomNum: Number;
+  roomNum: number;
 
   @Column
-  name: String;
+  name: string;
 
   @Column
-  description?: String;
+  description?: string;
 
   @Column
-  isPrivate: Boolean;
+  isPrivate: boolean;
 
   @Column
-  maxUsers: Number;
+  maxUsers: number;
+
+  @Default('false')
+  @Column
+  isStarted: boolean;
 
   @HasMany(() => UserEntity)
   users: UserEntity[];

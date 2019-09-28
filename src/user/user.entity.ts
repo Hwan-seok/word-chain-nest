@@ -30,7 +30,7 @@ export class UserEntity extends Model<UserEntity> {
 
   @ForeignKey(() => RoomEntity)
   @Column
-  participated: number;
+  participatedRoom: number;
 
   @Default(false)
   @Column
