@@ -2,8 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from './pipes/validation.pipe';
 import * as helmet from 'helmet';
-import * as csurf from 'csurf';
+// import * as csurf from 'csurf';
 import * as rateLimit from 'express-rate-limit';
+import { AuthGuard } from '@nestjs/passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -18,6 +19,8 @@ async function bootstrap() {
       max: 100, // limit each IP to 100 requests per windowMs
     }),
   );
-  await app.listen(3000);
+  app.setGlobalPrefix('api');
+
+  await app.listen(4000);
 }
 bootstrap();
