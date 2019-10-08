@@ -11,18 +11,20 @@ import { map } from 'rxjs/operators';
 import { Client, Server, Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JWTService } from '../auth/jwt/jwt.service';
+import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { Message } from './interfaces/chat.message';
 import { RoomService } from '../room/room.service';
+import { WordService } from '../word/word.service';
 
 @WebSocketGateway({ namespace: '/line' })
 export class ChatEvents implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
-    private readonly jwtService: JWTService,
+    private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly roomService: RoomService,
+    private readonly wordService: WordService,
   ) {}
 
   @WebSocketServer()
@@ -70,9 +72,8 @@ export class ChatEvents implements OnGatewayConnection, OnGatewayDisconnect {
     const accessToken: string = param.token;
     const roomNum: string = param.roomNum;
 
-    const user: UserEntity = await this.jwtService.verify(accessToken, true);
+    const user: UserEntity = await this.jwtService.verify(accessToken);
     const userId = user.id;
-
     return { roomNum, userId };
   }
 }

@@ -8,6 +8,7 @@ import { ConfigModule } from '../config/config.module';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { RoomModule } from '../room/room.module';
+import { WordModule } from '../word/word.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RoomModule } from '../room/room.module';
     UserModule,
     AuthModule,
     RoomModule,
+    WordModule
   ],
   providers: [ChatService, ChatEvents],
 })
