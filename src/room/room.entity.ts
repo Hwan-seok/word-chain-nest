@@ -10,7 +10,7 @@ import {
   AutoIncrement,
   Default,
 } from 'sequelize-typescript';
-import { Message } from '../chat/chat.entity';
+// import { Message } from '../chat/chat.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Table({ tableName: 'Rooms', underscored: true })
@@ -24,6 +24,9 @@ export class RoomEntity extends Model<RoomEntity> {
   name: string;
 
   @Column
+  owner: string;
+  
+  @Column
   description?: string;
 
   @Column
@@ -32,15 +35,15 @@ export class RoomEntity extends Model<RoomEntity> {
   @Column
   maxUsers: number;
 
-  @Default('false')
+  @Default(false)
   @Column
   isStarted: boolean;
 
   @HasMany(() => UserEntity)
   users: UserEntity[];
 
-  @HasMany(() => Message)
-  messages: Message[];
+  // @HasMany(() => Message)
+  // messages: Message[];
 
   @CreatedAt
   createdAt: Date;

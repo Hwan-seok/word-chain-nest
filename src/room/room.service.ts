@@ -12,14 +12,32 @@ export class RoomService {
     private readonly roomRepository: typeof RoomEntity,
   ) {}
 
-  async findAll(offset: number, limit: number, isStarted: boolean = false) {
-    return await this.roomRepository.findAll({
-      where: {
-        isStarted,
-      },
+  async findAll(
+    offset: number,
+    limit: number,
+    startedFilter: string,
+    privateFilter: string,
+  ) {
+    const where = {};
+    if (startedFilter !== 'all') {
+      where['isStarted'] = startedFilter === 'started' ? true : false;
+    }
+    if (privateFilter !== 'all') {
+      where['isPrivate'] = privateFilter === 'private' ? true : false;
+    }
+    const foundRooms = this.roomRepository.findAll({
+      where,
       offset,
       limit,
     });
+    const foundAllRoomsCount = this.roomRepository.count({ where });
+
+    const [rooms, foundCount] = await Promise.all([
+      foundRooms,
+      foundAllRoomsCount,
+    ]);
+    const pages = Math.ceil(foundCount / limit);
+    return { rooms, pages };
   }
 
   async findOne(findOptions: FindOptions) {
@@ -47,9 +65,9 @@ export class RoomService {
     );
   }
 
-  async delete(roomName: string) {
+  async delete(roomNum: number) {
     const isDeleted = await this.roomRepository.destroy({
-      where: { name: roomName },
+      where: { roomNum },
     });
     if (!isDeleted) throw new ConflictException('Room not exists');
   }
