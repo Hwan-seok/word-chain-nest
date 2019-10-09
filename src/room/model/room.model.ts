@@ -3,15 +3,22 @@ import { Message } from '../../chat/interfaces/chat.message';
 import { IsString, IsBoolean, IsNumber } from 'class-validator';
 export class RoomDTO {
   @IsString()
-  name: String;
+  name: string;
+
   @IsString()
-  description?: String;
+  description?: string;
+
   @IsBoolean()
-  isPrivate: Boolean;
+  isPrivate: boolean;
+
   @IsNumber()
   maxUsers: number;
+
+  isStarted?: boolean;
+
+  roomNum?: number;
+
   users?: UserDTO[];
+
   messages?: Message[];
-  createdAt: Date;
-  updatedAt: Date;
 }

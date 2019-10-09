@@ -3,23 +3,77 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsResponse,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Client, Server } from 'socket.io';
+import { Client, Server, Socket } from 'socket.io';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { Message } from './interfaces/chat.message';
+import { RoomService } from '../room/room.service';
+import { WordService } from '../word/word.service';
 
-@WebSocketGateway()
-export class ChatEvents {
+@WebSocketGateway({ namespace: '/line' })
+export class ChatEvents implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly roomService: RoomService,
+    private readonly wordService: WordService,
+  ) {}
+
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('events')
-  findAll(client: Client, data: any): Observable<WsResponse<number>> {
-    return from([1, 2, 3]).pipe(map(item => ({ event: 'events', data: item })));
+  async handleConnection(socket) {
+    const { roomNum, userId } = await this.throughConnection(socket);
+
+    this.userService.joinRoom(roomNum, userId);
+    socket.join(roomNum);
+    this.server.to(roomNum).emit('joinUser', userId);
+  }
+
+  async handleDisconnect(socket) {
+    const { roomNum, userId } = await this.throughConnection(socket);
+
+    this.userService.leaveRoom(roomNum, userId);
+    socket.leave(roomNum);
+    this.server.to(roomNum).emit('leaveUser', userId);
+  }
+
+  @SubscribeMessage('userSentMessage')
+  async sentMessage(socket: Socket, message: Message) {
+    socket.broadcast
+      .to(socket.handshake.query.roomNum)
+      .emit('serverSentMessage', message);
+  }
+
+  @SubscribeMessage('startGame')
+  async startGame(socket: Socket, message: Message) {
+    this.roomService.update({
+      roomNum: message.roomNum,
+      isStarted: true,
+    });
+    this.server.to(message.roomNum.toString()).emit('startGame');
   }
 
   @SubscribeMessage('identity')
   async identity(client: Client, data: number): Promise<number> {
     return data;
+  }
+
+  async throughConnection(socket): Promise<any> {
+    const param = socket.handshake.query;
+    const accessToken: string = param.token;
+    const roomNum: string = param.roomNum;
+
+    const user: UserEntity = await this.jwtService.verify(accessToken);
+    const userId = user.id;
+    return { roomNum, userId };
   }
 }

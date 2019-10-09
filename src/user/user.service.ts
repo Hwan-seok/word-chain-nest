@@ -14,6 +14,20 @@ export class UserService {
     private readonly userRepositoy: typeof UserEntity,
   ) {}
 
+  async joinRoom(userId: string, roomNum: number) {
+    this.userRepositoy.update(
+      { participated: roomNum },
+      { where: { id: userId } },
+    );
+  }
+
+  async leaveRoom(userId: string, roomNum: number) {
+    this.userRepositoy.update(
+      { participated: null },
+      { where: { id: userId } },
+    );
+  }
+
   async create(user: UserDTO) {
     const [foundUser, isCreated] = await this.userRepositoy.findOrCreate({
       where: { id: user.id },
