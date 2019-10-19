@@ -38,9 +38,15 @@ export class UserService {
     }
   }
 
-  async findUserById(id: string): Promise<UserEntity | null> {
-    const user: UserEntity = await this.userRepositoy.findByPk(id);
-
+  async findUserById(
+    id: string,
+    withoutPassword = true,
+  ): Promise<UserEntity | null> {
+    let scope = '';
+    if (withoutPassword) {
+      scope = 'withoutPassword';
+    }
+    const user: UserEntity = await this.userRepositoy.scope(scope).findByPk(id);
     if (!user) {
       return null;
     }

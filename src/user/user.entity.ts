@@ -9,10 +9,18 @@ import {
   BelongsTo,
   ForeignKey,
   HasOne,
+  Scopes,
 } from 'sequelize-typescript';
 import { Message } from '../chat/chat.entity';
 import { RoomEntity } from '../room/room.entity';
 
+@Scopes(() => ({
+  withoutPassword: {
+    attributes: {
+      exclude: ['password'],
+    },
+  },
+}))
 @Table({ tableName: 'Users', underscored: true })
 export class UserEntity extends Model<UserEntity> {
   @PrimaryKey

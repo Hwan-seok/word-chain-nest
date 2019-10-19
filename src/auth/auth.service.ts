@@ -13,9 +13,7 @@ export class AuthService {
   ) {}
 
   async validateUser(userId: string, pass: string): Promise<any> {
-    const user: UserEntity = await this.userService.findUserByIdIncluePassword(
-      userId,
-    );
+    const user: UserEntity = await this.userService.findUserById(userId, false);
     // TODO: 암호화
     if (user && user.password === pass) {
       return user;
