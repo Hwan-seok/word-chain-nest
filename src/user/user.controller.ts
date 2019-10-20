@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Delete,
+  ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from './dto/user.dto';
@@ -22,7 +23,7 @@ export class UserController {
 
   @Post()
   async createUser(@Body() user: UserDTO) {
-    this.userService.create(user);
+    await this.userService.create(user);
   }
 
   @Put()
@@ -32,6 +33,6 @@ export class UserController {
 
   @Delete(':id')
   async deleteUser(@Param('id') id) {
-    this.userService.delete(id);
+    await this.userService.delete(id);
   }
 }

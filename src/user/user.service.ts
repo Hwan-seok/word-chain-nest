@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserEntity } from './user.entity';
 import { UserDTO } from './dto/user.dto';
+import { idDuplicatedException } from './user.exception';
 
 @Injectable()
 export class UserService {
@@ -33,8 +34,9 @@ export class UserService {
       where: { id: user.id },
       defaults: user,
     });
+
     if (isCreated === false) {
-      throw new ConflictException('Requested ID Already Exists Exception');
+      throw new idDuplicatedException(foundUser.id);
     }
   }
 
@@ -42,11 +44,15 @@ export class UserService {
     id: string,
     withoutPassword = true,
   ): Promise<UserEntity | null> {
+
     let scope = '';
+
     if (withoutPassword) {
       scope = 'withoutPassword';
     }
+
     const user: UserEntity = await this.userRepositoy.scope(scope).findByPk(id);
+    
     if (!user) {
       return null;
     }
@@ -59,6 +65,6 @@ export class UserService {
 
   async delete(id: string) {
     const isDeleted = await this.userRepositoy.destroy({ where: { id } });
-    if (!isDeleted) throw new ConflictException('User Not Exist Exception');
+    if (!isDeleted) throw new ConflictException('User not exists');
   }
 }
