@@ -6,10 +6,13 @@ export class RoomDTO {
   name: string;
 
   @IsString()
+  password: string;
+
+  @IsString()
   description?: string;
 
   @IsBoolean()
-  isPrivate: boolean;
+  isPrivate?: boolean;
 
   @IsNumber()
   maxUsers: number;

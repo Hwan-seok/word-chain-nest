@@ -8,11 +8,14 @@ import {
   Put,
   Query,
   UseGuards,
+  BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { RoomDTO } from './model/room.model';
 import { RoomService } from './room.service';
 import { SHOWING_ROOMS_PER_PAGE } from './room.constant';
 import { AuthGuard } from '@nestjs/passport';
+import { RoomEntity } from './room.entity';
 
 @Controller('room')
 export class RoomController {
@@ -23,7 +26,17 @@ export class RoomController {
 
   @Get(':roomNum')
   async showRoom(@Param('roomNum') roomNum: number) {
-    return await this.roomService.findOne({ roomNum });
+    const room: RoomEntity = await this.roomService.findOne({ roomNum });
+    if (room) {
+      return room;
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  @Post('/verifyPassword')
+  async verifyPassword(@Body() body) {
+    return await this.roomService.confirmPassword(body);
   }
 
   @Get('/page/:page')
@@ -41,7 +54,6 @@ export class RoomController {
   }
 
   @Post()
-  @UseGuards(AuthGuard())
   async createRoom(@Body() room: RoomDTO) {
     this.roomService.create(room);
   }

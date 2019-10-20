@@ -4,6 +4,7 @@ import { ROOM_REPOSITORY } from './room.constant';
 import { RoomEntity } from './room.entity';
 import { UserEntity } from '../user/user.entity';
 import { FindOptions } from './option/room.findOption';
+import { IncorrectPasswordException } from './exceptions/exception.incorrectPassword';
 
 @Injectable()
 export class RoomService {
@@ -46,6 +47,20 @@ export class RoomService {
       include: [{ model: UserEntity }],
       //TODO:userId 포함하는놈 있을때만 하도록 include where절 삽입
     });
+  }
+
+  async confirmPassword(findOption: FindOptions) {
+    const { password, roomNum } = findOption;
+
+    const room: RoomEntity = await this.roomRepository.findOne({
+      where: { roomNum },
+    });
+
+    if (room && room.password === password) {
+      return room;
+    } else {
+      throw new IncorrectPasswordException();
+    }
   }
 
   async create(room: RoomDTO) {

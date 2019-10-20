@@ -24,8 +24,11 @@ export class RoomEntity extends Model<RoomEntity> {
   name: string;
 
   @Column
+  password: string;
+
+  @Column
   owner: string;
-  
+
   @Column
   description?: string;
 
