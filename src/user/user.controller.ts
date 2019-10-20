@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   ConflictException,
+  UseFilters,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from './dto/user.dto';
