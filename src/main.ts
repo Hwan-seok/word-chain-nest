@@ -5,6 +5,7 @@ import * as helmet from 'helmet';
 // import * as csurf from 'csurf';
 import * as rateLimit from 'express-rate-limit';
 import { AuthGuard } from '@nestjs/passport';
+import { AllExceptionsFilter } from './filter/GlobalExceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -20,7 +21,7 @@ async function bootstrap() {
     }),
   );
   app.setGlobalPrefix('api');
-
+  app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen(4000);
 }
 bootstrap();
